@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Homework 5: Customer Shopping Database</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="report_files/libs/quarto-html/quarto.js"></script>
+<script src="report_files/libs/quarto-html/popper.min.js"></script>
+<script src="report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="report_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="report_files/libs/bootstrap/bootstrap-8a79a254b8e706d3c925cde0a310d4f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="report_files/libs/quarto-diagram/mermaid.min.js"></script>
+<script src="report_files/libs/quarto-diagram/mermaid-init.js"></script>
+<link href="report_files/libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#entities-and-relationships" id="toc-entities-and-relationships" class="nav-link" data-scroll-target="#entities-and-relationships">Entities and Relationships</a></li>
+  <li><a href="#er-diagram" id="toc-er-diagram" class="nav-link" data-scroll-target="#er-diagram">ER Diagram</a>
+  <ul class="collapse">
+  <li><a href="#chen-er-diagram" id="toc-chen-er-diagram" class="nav-link" data-scroll-target="#chen-er-diagram">Chen ER Diagram</a></li>
+  </ul></li>
+  <li><a href="#crows-foot-er-diagram-mermaid" id="toc-crows-foot-er-diagram-mermaid" class="nav-link" data-scroll-target="#crows-foot-er-diagram-mermaid">Crow’s Foot ER Diagram (Mermaid)</a>
+  <ul class="collapse">
+  <li><a href="#mysql-statementsquerys" id="toc-mysql-statementsquerys" class="nav-link" data-scroll-target="#mysql-statementsquerys">MySQL statements(query’s)</a>
+  <ul class="collapse">
+  <li><a href="#inserting-values-for-table" id="toc-inserting-values-for-table" class="nav-link" data-scroll-target="#inserting-values-for-table">Inserting Values for table</a></li>
+  </ul></li>
+  <li><a href="#python-list-tables-preview-rows" id="toc-python-list-tables-preview-rows" class="nav-link" data-scroll-target="#python-list-tables-preview-rows">Python – List Tables &amp; Preview Rows</a></li>
+  <li><a href="#first-5-rows-data-from-each-table" id="toc-first-5-rows-data-from-each-table" class="nav-link" data-scroll-target="#first-5-rows-data-from-each-table">First 5 row’s Data from each table</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Homework 5: Customer Shopping Database</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="authors" class="level4">
+<h4 class="anchored" data-anchor-id="authors"><strong>Authors:</strong></h4>
+<p>
+<em>Eshika Sanjana Konyala - konyalae@vcu.edu </em> <br> <em>Sowmya Sri Regu - regus@vcu.edu</em><br> <em>Srigana Pulikantham - pulikanthams@vcu.edu</em> <br> <em>Viditha Reddy Enukulla - enukullav@vcu.edu</em>
+</p>
+<p><strong>GitHub Repository:</strong> https://github.com/Eshikasanjana/Advanced-Database</p>
+</section>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This report documents a database schema designed to track customer shopping behavior, purchases, payments, and shipping details. It includes ER diagrams, schema listings, and sample data. The database, <code>Customer_shopping</code>, was created using MySQL and explored using Python with Pandas.</p>
+</section>
+<section id="entities-and-relationships" class="level1">
+<h1>Entities and Relationships</h1>
+<p>The following entities were identified from HW3:</p>
+<ul>
+<li><strong>Customer</strong></li>
+<li><strong>Product</strong></li>
+<li><strong>Purchase</strong></li>
+<li><strong>Payment</strong></li>
+<li><strong>Shipping</strong></li>
+</ul>
+<p>These entities and their relationships are defined through primary and foreign keys.</p>
+</section>
+<section id="er-diagram" class="level1">
+<h1>ER Diagram</h1>
+<section id="chen-er-diagram" class="level2">
+<h2 class="anchored" data-anchor-id="chen-er-diagram">Chen ER Diagram</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<svg width="672" height="480" viewbox="0.00 0.00 875.40 672.00" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 668)">
+<title>CustomerShoppingChen</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-668 871.4,-668 871.4,4 -4,4"></polygon>
+<g id="clust1" class="cluster">
+<title>cluster_customer</title>
+<polygon fill="lightblue" stroke="lightblue" points="8,-8 8,-463 288.7,-463 288.7,-8 8,-8"></polygon>
+<text text-anchor="middle" x="148.35" y="-446.4" font-family="Times,serif" font-size="14.00">Customer</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_product</title>
+<polygon fill="lightyellow" stroke="lightyellow" points="680.69,-255 680.69,-656 859.4,-656 859.4,-255 680.69,-255"></polygon>
+<text text-anchor="middle" x="770.04" y="-639.4" font-family="Times,serif" font-size="14.00">Product</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_purchase</title>
+<polygon fill="lightpink" stroke="lightpink" points="360.83,-471 360.83,-656 609.32,-656 609.32,-471 360.83,-471"></polygon>
+<text text-anchor="middle" x="485.08" y="-639.4" font-family="Times,serif" font-size="14.00">Purchase</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_payment</title>
+<polygon fill="lightgreen" stroke="lightgreen" points="381.23,-224 381.23,-463 588.93,-463 588.93,-224 381.23,-224"></polygon>
+<text text-anchor="middle" x="485.08" y="-446.4" font-family="Times,serif" font-size="14.00">Payment</text>
+</g>
+<g id="clust5" class="cluster">
+<title>cluster_shipping</title>
+<polygon fill="lightcyan" stroke="lightcyan" points="393.05,-31 393.05,-216 577.1,-216 577.1,-31 393.05,-31"></polygon>
+<text text-anchor="middle" x="485.08" y="-199.4" font-family="Times,serif" font-size="14.00">Shipping</text>
+</g>
+<!-- CustomerID -->
+<g id="node1" class="node">
+<title>CustomerID</title>
+<ellipse fill="none" stroke="black" cx="148.35" cy="-412" rx="62.6" ry="18"></ellipse>
+<text text-anchor="middle" x="148.35" y="-407.8" font-family="Helvetica,sans-Serif" font-size="14.00">CustomerID</text>
+</g>
+<!-- Purchase_ID -->
+<g id="node16" class="node">
+<title>Purchase_ID</title>
+<ellipse fill="none" stroke="black" cx="485.08" cy="-605" rx="66.72" ry="18"></ellipse>
+<text text-anchor="middle" x="485.08" y="-600.8" font-family="Helvetica,sans-Serif" font-size="14.00">Purchase_ID</text>
+</g>
+<!-- CustomerID&#45;&gt;Purchase_ID -->
+<g id="edge1" class="edge">
+<title>CustomerID-&gt;Purchase_ID</title>
+<path fill="none" stroke="black" d="M165.89,-429.43C199.3,-463.58 278.72,-539.28 360.83,-578 377.47,-585.84 396.45,-591.44 414.44,-595.43"></path>
+<polygon fill="black" stroke="black" points="413.81,-598.88 424.32,-597.49 415.24,-592.02 413.81,-598.88"></polygon>
+<text text-anchor="middle" x="324.77" y="-575.2" font-family="Helvetica,sans-Serif" font-size="14.00">makes</text>
+</g>
+<!-- Payment_ID -->
+<g id="node19" class="node">
+<title>Payment_ID</title>
+<ellipse fill="none" stroke="black" cx="485.08" cy="-412" rx="64.35" ry="18"></ellipse>
+<text text-anchor="middle" x="485.08" y="-407.8" font-family="Helvetica,sans-Serif" font-size="14.00">Payment_ID</text>
+</g>
+<!-- CustomerID&#45;&gt;Payment_ID -->
+<g id="edge2" class="edge">
+<title>CustomerID-&gt;Payment_ID</title>
+<path fill="none" stroke="black" d="M211.14,-412C267.48,-412 350.79,-412 410.54,-412"></path>
+<polygon fill="black" stroke="black" points="410.66,-415.5 420.66,-412 410.66,-408.5 410.66,-415.5"></polygon>
+<text text-anchor="middle" x="324.77" y="-416.2" font-family="Helvetica,sans-Serif" font-size="14.00">uses</text>
+</g>
+<!-- Shipping_ID -->
+<g id="node23" class="node">
+<title>Shipping_ID</title>
+<ellipse fill="none" stroke="black" cx="485.08" cy="-165" rx="63.8" ry="18"></ellipse>
+<text text-anchor="middle" x="485.08" y="-160.8" font-family="Helvetica,sans-Serif" font-size="14.00">Shipping_ID</text>
+</g>
+<!-- CustomerID&#45;&gt;Shipping_ID -->
+<g id="edge3" class="edge">
+<title>CustomerID-&gt;Shipping_ID</title>
+<path fill="none" stroke="black" d="M211.22,-412.39C237.53,-409.64 267.06,-402.32 288.7,-385 351.19,-334.98 304.46,-276.81 360.83,-220 379.03,-201.66 404.41,-188.92 427.42,-180.35"></path>
+<polygon fill="black" stroke="black" points="428.84,-183.56 437.1,-176.93 426.51,-176.96 428.84,-183.56"></polygon>
+<text text-anchor="middle" x="324.77" y="-379.2" font-family="Helvetica,sans-Serif" font-size="14.00">receives</text>
+</g>
+<!-- Age -->
+<g id="node2" class="node">
+<title>Age</title>
+<ellipse fill="none" stroke="black" cx="148.35" cy="-358" rx="28.44" ry="18"></ellipse>
+<text text-anchor="middle" x="148.35" y="-353.8" font-family="Helvetica,sans-Serif" font-size="14.00">Age</text>
+</g>
+<!-- Gender -->
+<g id="node3" class="node">
+<title>Gender</title>
+<ellipse fill="none" stroke="black" cx="148.35" cy="-304" rx="43.49" ry="18"></ellipse>
+<text text-anchor="middle" x="148.35" y="-299.8" font-family="Helvetica,sans-Serif" font-size="14.00">Gender</text>
+</g>
+<!-- Location -->
+<g id="node4" class="node">
+<title>Location</title>
+<ellipse fill="none" stroke="black" cx="148.35" cy="-250" rx="47.59" ry="18"></ellipse>
+<text text-anchor="middle" x="148.35" y="-245.8" font-family="Helvetica,sans-Serif" font-size="14.00">Location</text>
+</g>
+<!-- Subscription_Status -->
+<g id="node5" class="node">
+<title>Subscription_Status</title>
+<ellipse fill="none" stroke="black" cx="148.35" cy="-196" rx="96.85" ry="18"></ellipse>
+<text text-anchor="middle" x="148.35" y="-191.8" font-family="Helvetica,sans-Serif" font-size="14.00">Subscription_Status</text>
+</g>
+<!-- Previous_Purchases -->
+<g id="node6" class="node">
+<title>Previous_Purchases</title>
+<ellipse fill="none" stroke="black" cx="148.35" cy="-142" rx="99.71" ry="18"></ellipse>
+<text text-anchor="middle" x="148.35" y="-137.8" font-family="Helvetica,sans-Serif" font-size="14.00">Previous_Purchases</text>
+</g>
+<!-- Preferred_Payment_Method -->
+<g id="node7" class="node">
+<title>Preferred_Payment_Method</title>
+<ellipse fill="none" stroke="black" cx="148.35" cy="-88" rx="132.2" ry="18"></ellipse>
+<text text-anchor="middle" x="148.35" y="-83.8" font-family="Helvetica,sans-Serif" font-size="14.00">Preferred_Payment_Method</text>
+</g>
+<!-- Frequency_of_Purchases -->
+<g id="node8" class="node">
+<title>Frequency_of_Purchases</title>
+<ellipse fill="none" stroke="black" cx="148.35" cy="-34" rx="121.16" ry="18"></ellipse>
+<text text-anchor="middle" x="148.35" y="-29.8" font-family="Helvetica,sans-Serif" font-size="14.00">Frequency_of_Purchases</text>
+</g>
+<!-- Product_ID -->
+<g id="node9" class="node">
+<title>Product_ID</title>
+<ellipse fill="none" stroke="black" cx="770.04" cy="-605" rx="59.19" ry="18"></ellipse>
+<text text-anchor="middle" x="770.04" y="-600.8" font-family="Helvetica,sans-Serif" font-size="14.00">Product_ID</text>
+</g>
+<!-- Item_Purchased -->
+<g id="node10" class="node">
+<title>Item_Purchased</title>
+<ellipse fill="none" stroke="black" cx="770.04" cy="-551" rx="81.21" ry="18"></ellipse>
+<text text-anchor="middle" x="770.04" y="-546.8" font-family="Helvetica,sans-Serif" font-size="14.00">Item_Purchased</text>
+</g>
+<!-- Product_Name -->
+<g id="node11" class="node">
+<title>Product_Name</title>
+<ellipse fill="none" stroke="black" cx="770.04" cy="-497" rx="75.4" ry="18"></ellipse>
+<text text-anchor="middle" x="770.04" y="-492.8" font-family="Helvetica,sans-Serif" font-size="14.00">Product_Name</text>
+</g>
+<!-- Category -->
+<g id="node12" class="node">
+<title>Category</title>
+<ellipse fill="none" stroke="black" cx="770.04" cy="-443" rx="50.44" ry="18"></ellipse>
+<text text-anchor="middle" x="770.04" y="-438.8" font-family="Helvetica,sans-Serif" font-size="14.00">Category</text>
+</g>
+<!-- Size -->
+<g id="node13" class="node">
+<title>Size</title>
+<ellipse fill="none" stroke="black" cx="770.04" cy="-389" rx="29.65" ry="18"></ellipse>
+<text text-anchor="middle" x="770.04" y="-384.8" font-family="Helvetica,sans-Serif" font-size="14.00">Size</text>
+</g>
+<!-- Color -->
+<g id="node14" class="node">
+<title>Color</title>
+<ellipse fill="none" stroke="black" cx="770.04" cy="-335" rx="34.23" ry="18"></ellipse>
+<text text-anchor="middle" x="770.04" y="-330.8" font-family="Helvetica,sans-Serif" font-size="14.00">Color</text>
+</g>
+<!-- Season -->
+<g id="node15" class="node">
+<title>Season</title>
+<ellipse fill="none" stroke="black" cx="770.04" cy="-281" rx="43.58" ry="18"></ellipse>
+<text text-anchor="middle" x="770.04" y="-276.8" font-family="Helvetica,sans-Serif" font-size="14.00">Season</text>
+</g>
+<!-- Purchase_ID&#45;&gt;Product_ID -->
+<g id="edge4" class="edge">
+<title>Purchase_ID-&gt;Product_ID</title>
+<path fill="none" stroke="black" d="M552.06,-605C596.61,-605 655.27,-605 700.37,-605"></path>
+<polygon fill="black" stroke="black" points="700.65,-608.5 710.65,-605 700.65,-601.5 700.65,-608.5"></polygon>
+<text text-anchor="middle" x="645.01" y="-609.2" font-family="Helvetica,sans-Serif" font-size="14.00">includes</text>
+</g>
+<!-- Purchase_Amount_USD -->
+<g id="node17" class="node">
+<title>Purchase_Amount_USD</title>
+<ellipse fill="none" stroke="black" cx="485.08" cy="-551" rx="116.49" ry="18"></ellipse>
+<text text-anchor="middle" x="485.08" y="-546.8" font-family="Helvetica,sans-Serif" font-size="14.00">Purchase_Amount_USD</text>
+</g>
+<!-- Review_Rating -->
+<g id="node18" class="node">
+<title>Review_Rating</title>
+<ellipse fill="none" stroke="black" cx="485.08" cy="-497" rx="75.97" ry="18"></ellipse>
+<text text-anchor="middle" x="485.08" y="-492.8" font-family="Helvetica,sans-Serif" font-size="14.00">Review_Rating</text>
+</g>
+<!-- Payment_Method -->
+<g id="node20" class="node">
+<title>Payment_Method</title>
+<ellipse fill="none" stroke="black" cx="485.08" cy="-358" rx="86.95" ry="18"></ellipse>
+<text text-anchor="middle" x="485.08" y="-353.8" font-family="Helvetica,sans-Serif" font-size="14.00">Payment_Method</text>
+</g>
+<!-- Discount_Applied -->
+<g id="node21" class="node">
+<title>Discount_Applied</title>
+<ellipse fill="none" stroke="black" cx="485.08" cy="-304" rx="86.39" ry="18"></ellipse>
+<text text-anchor="middle" x="485.08" y="-299.8" font-family="Helvetica,sans-Serif" font-size="14.00">Discount_Applied</text>
+</g>
+<!-- Promo_Code_Used -->
+<g id="node22" class="node">
+<title>Promo_Code_Used</title>
+<ellipse fill="none" stroke="black" cx="485.08" cy="-250" rx="95.7" ry="18"></ellipse>
+<text text-anchor="middle" x="485.08" y="-245.8" font-family="Helvetica,sans-Serif" font-size="14.00">Promo_Code_Used</text>
+</g>
+<!-- Customer_Name -->
+<g id="node24" class="node">
+<title>Customer_Name</title>
+<ellipse fill="none" stroke="black" cx="485.08" cy="-111" rx="84.05" ry="18"></ellipse>
+<text text-anchor="middle" x="485.08" y="-106.8" font-family="Helvetica,sans-Serif" font-size="14.00">Customer_Name</text>
+</g>
+<!-- Shipping_Type -->
+<g id="node25" class="node">
+<title>Shipping_Type</title>
+<ellipse fill="none" stroke="black" cx="485.08" cy="-57" rx="75.42" ry="18"></ellipse>
+<text text-anchor="middle" x="485.08" y="-52.8" font-family="Helvetica,sans-Serif" font-size="14.00">Shipping_Type</text>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="crows-foot-er-diagram-mermaid" class="level1">
+<h1>Crow’s Foot ER Diagram (Mermaid)</h1>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">erDiagram
+    CUSTOMER ||--o{ PURCHASE : makes
+    CUSTOMER ||--o{ PAYMENT : uses
+    CUSTOMER ||--o{ SHIPPING : receives
+    PURCHASE }|--|| PRODUCT : contains
+    
+    CUSTOMER {
+        int Customer_ID PK
+        int Age
+        string Gender
+        string Location
+        string Subscription_Status
+        int Previous_Purchases
+        string Preferred_Payment_Method
+        string Frequency_of_Purchases
+    }
+    
+    PRODUCT {
+        string Item_Purchased PK
+        string Product_Name
+        string Category
+        string Size
+        string Color
+        string Season
+    }
+    
+    PURCHASE {
+        int Purchase_ID PK
+        int Customer_ID FK
+        string Item_Purchased FK
+        float Purchase_Amount_USD
+        float Review_Rating
+    }
+    
+    PAYMENT {
+        int Payment_ID PK
+        int Customer_ID FK
+        string Payment_Method
+        string Discount_Applied
+        string Promo_Code_Used
+    }
+    
+    SHIPPING {
+        int Shipping_ID PK
+        int Customer_ID FK
+        string Customer_Name
+        string Shipping_Type
+    }
+
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<section id="mysql-statementsquerys" class="level2">
+<h2 class="anchored" data-anchor-id="mysql-statementsquerys">MySQL statements(query’s)</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">DATABASE</span> Customer_shopping;</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">USE</span> Customer_shopping;</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> Customer (</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    Customer_ID <span class="dt">INT</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    Age <span class="dt">INT</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    Gender <span class="dt">VARCHAR</span>(<span class="dv">10</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    Location <span class="dt">VARCHAR</span>(<span class="dv">100</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    Subscription_Status <span class="dt">VARCHAR</span>(<span class="dv">10</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    Previous_Purchases <span class="dt">INT</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    Preferred_Payment_Method <span class="dt">VARCHAR</span>(<span class="dv">50</span>),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    Frequency_of_Purchases <span class="dt">VARCHAR</span>(<span class="dv">50</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> Product (</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    Product_ID <span class="dt">INT</span> AUTO_INCREMENT <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    Item_Purchased <span class="dt">VARCHAR</span>(<span class="dv">100</span>),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    Product_Name <span class="dt">VARCHAR</span>(<span class="dv">100</span>),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">Category</span> <span class="dt">VARCHAR</span>(<span class="dv">50</span>),</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">Size</span> <span class="dt">VARCHAR</span>(<span class="dv">10</span>),</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    Color <span class="dt">VARCHAR</span>(<span class="dv">30</span>),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    Season <span class="dt">VARCHAR</span>(<span class="dv">30</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> Purchase (</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    Purchase_ID <span class="dt">INT</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    Customer_ID <span class="dt">INT</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    Product_ID <span class="dt">INT</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    Purchase_Amount_USD <span class="dt">DECIMAL</span>(<span class="dv">10</span>,<span class="dv">2</span>),</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    Review_Rating <span class="dt">DECIMAL</span>(<span class="dv">2</span>,<span class="dv">1</span>),</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FOREIGN</span> <span class="kw">KEY</span> (Customer_ID) <span class="kw">REFERENCES</span> Customer(Customer_ID),</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FOREIGN</span> <span class="kw">KEY</span> (Product_ID) <span class="kw">REFERENCES</span> Product(Product_ID)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> Payment (</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    Payment_ID <span class="dt">INT</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    Customer_ID <span class="dt">INT</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    Payment_Method <span class="dt">VARCHAR</span>(<span class="dv">50</span>),</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    Discount_Applied <span class="dt">VARCHAR</span>(<span class="dv">10</span>),</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    Promo_Code_Used <span class="dt">VARCHAR</span>(<span class="dv">50</span>),</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FOREIGN</span> <span class="kw">KEY</span> (Customer_ID) <span class="kw">REFERENCES</span> Customer(Customer_ID)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> Shipping (</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    Shipping_ID <span class="dt">INT</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    Customer_ID <span class="dt">INT</span>,</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    Customer_Name <span class="dt">VARCHAR</span>(<span class="dv">100</span>),</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    Shipping_Type <span class="dt">VARCHAR</span>(<span class="dv">50</span>),</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FOREIGN</span> <span class="kw">KEY</span> (Customer_ID) <span class="kw">REFERENCES</span> Customer(Customer_ID)</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="inserting-values-for-table" class="level3">
+<h3 class="anchored" data-anchor-id="inserting-values-for-table">Inserting Values for table</h3>
+<section id="values-for-customer-table" class="level4">
+<h4 class="anchored" data-anchor-id="values-for-customer-table">Values for customer table</h4>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> Customer (Customer_ID, Age, Gender, Location, Subscription_Status, Previous_Purchases, Preferred_Payment_Method, Frequency_of_Purchases)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span>, <span class="dv">55</span>, <span class="st">'Male'</span>, <span class="st">'Kentucky'</span>, <span class="st">'Yes'</span>, <span class="dv">14</span>, <span class="st">'Venmo'</span>, <span class="st">'Fortnightly'</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>(<span class="dv">2</span>, <span class="dv">19</span>, <span class="st">'Male'</span>, <span class="st">'Maine'</span>, <span class="st">'Yes'</span>, <span class="dv">2</span>, <span class="st">'Cash'</span>, <span class="st">'Fortnightly'</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(<span class="dv">3</span>, <span class="dv">50</span>, <span class="st">'Male'</span>, <span class="st">'Massachusetts'</span>, <span class="st">'Yes'</span>, <span class="dv">23</span>, <span class="st">'Credit Card'</span>, <span class="st">'Weekly'</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>(<span class="dv">4</span>, <span class="dv">21</span>, <span class="st">'Male'</span>, <span class="st">'Rhode Island'</span>, <span class="st">'Yes'</span>, <span class="dv">49</span>, <span class="st">'PayPal'</span>, <span class="st">'Weekly'</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>(<span class="dv">5</span>, <span class="dv">45</span>, <span class="st">'Male'</span>, <span class="st">'Oregon'</span>, <span class="st">'Yes'</span>, <span class="dv">31</span>, <span class="st">'PayPal'</span>, <span class="st">'Annually'</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>(<span class="dv">6</span>, <span class="dv">46</span>, <span class="st">'Male'</span>, <span class="st">'Wyoming'</span>, <span class="st">'Yes'</span>, <span class="dv">14</span>, <span class="st">'Venmo'</span>, <span class="st">'Weekly'</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>(<span class="dv">7</span>, <span class="dv">63</span>, <span class="st">'Male'</span>, <span class="st">'Montana'</span>, <span class="st">'Yes'</span>, <span class="dv">49</span>, <span class="st">'Cash'</span>, <span class="st">'Quarterly'</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>(<span class="dv">8</span>, <span class="dv">27</span>, <span class="st">'Male'</span>, <span class="st">'Louisiana'</span>, <span class="st">'Yes'</span>, <span class="dv">19</span>, <span class="st">'Credit Card'</span>, <span class="st">'Weekly'</span>),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>(<span class="dv">9</span>, <span class="dv">26</span>, <span class="st">'Male'</span>, <span class="st">'West Virginia'</span>, <span class="st">'Yes'</span>, <span class="dv">8</span>, <span class="st">'Venmo'</span>, <span class="st">'Annually'</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>(<span class="dv">10</span>, <span class="dv">57</span>, <span class="st">'Male'</span>, <span class="st">'Missouri'</span>, <span class="st">'Yes'</span>, <span class="dv">4</span>, <span class="st">'Cash'</span>, <span class="st">'Quarterly'</span>),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>(<span class="dv">11</span>, <span class="dv">53</span>, <span class="st">'Male'</span>, <span class="st">'Arkansas'</span>, <span class="st">'Yes'</span>, <span class="dv">26</span>, <span class="st">'Bank Transfer'</span>, <span class="st">'Bi-Weekly'</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>(<span class="dv">12</span>, <span class="dv">30</span>, <span class="st">'Male'</span>, <span class="st">'Hawaii'</span>, <span class="st">'Yes'</span>, <span class="dv">10</span>, <span class="st">'Bank Transfer'</span>, <span class="st">'Fortnightly'</span>),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>(<span class="dv">13</span>, <span class="dv">61</span>, <span class="st">'Male'</span>, <span class="st">'Delaware'</span>, <span class="st">'Yes'</span>, <span class="dv">37</span>, <span class="st">'Venmo'</span>, <span class="st">'Fortnightly'</span>),</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>(<span class="dv">14</span>, <span class="dv">65</span>, <span class="st">'Male'</span>, <span class="st">'New Hampshire'</span>, <span class="st">'Yes'</span>, <span class="dv">31</span>, <span class="st">'PayPal'</span>, <span class="st">'Weekly'</span>),</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>(<span class="dv">15</span>, <span class="dv">64</span>, <span class="st">'Male'</span>, <span class="st">'New York'</span>, <span class="st">'Yes'</span>, <span class="dv">34</span>, <span class="st">'Debit Card'</span>, <span class="st">'Weekly'</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="values-for-product-table" class="level4">
+<h4 class="anchored" data-anchor-id="values-for-product-table">Values for Product table</h4>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> Product (Item_Purchased, Product_Name, <span class="kw">Category</span>, <span class="kw">Size</span>, Color, Season)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Blouse'</span>, <span class="st">'Blouse'</span>, <span class="st">'Clothing'</span>, <span class="st">'M'</span>, <span class="st">'Turquoise'</span>, <span class="st">'Spring'</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Sneakers'</span>, <span class="st">'Sneakers'</span>, <span class="st">'Footwear'</span>, <span class="st">'9'</span>, <span class="st">'White'</span>, <span class="st">'Summer'</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Jeans'</span>, <span class="st">'Jeans'</span>, <span class="st">'Clothing'</span>, <span class="st">'32'</span>, <span class="st">'Blue'</span>, <span class="st">'Winter'</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Watch'</span>, <span class="st">'Smart Watch'</span>, <span class="st">'Accessories'</span>, <span class="st">'One Size'</span>, <span class="st">'Black'</span>, <span class="st">'All Season'</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Dress'</span>, <span class="st">'Floral Dress'</span>, <span class="st">'Clothing'</span>, <span class="st">'S'</span>, <span class="st">'Yellow'</span>, <span class="st">'Spring'</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Boots'</span>, <span class="st">'Ankle Boots'</span>, <span class="st">'Footwear'</span>, <span class="st">'8'</span>, <span class="st">'Brown'</span>, <span class="st">'Fall'</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Hat'</span>, <span class="st">'Sun Hat'</span>, <span class="st">'Accessories'</span>, <span class="st">'One Size'</span>, <span class="st">'Beige'</span>, <span class="st">'Summer'</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>(<span class="st">'T-Shirt'</span>, <span class="st">'Graphic Tee'</span>, <span class="st">'Clothing'</span>, <span class="st">'L'</span>, <span class="st">'Red'</span>, <span class="st">'Summer'</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Coat'</span>, <span class="st">'Winter Coat'</span>, <span class="st">'Clothing'</span>, <span class="st">'XL'</span>, <span class="st">'Gray'</span>, <span class="st">'Winter'</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Sandals'</span>, <span class="st">'Beach Sandals'</span>, <span class="st">'Footwear'</span>, <span class="st">'7'</span>, <span class="st">'Pink'</span>, <span class="st">'Summer'</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Bag'</span>, <span class="st">'Handbag'</span>, <span class="st">'Accessories'</span>, <span class="st">'Medium'</span>, <span class="st">'Black'</span>, <span class="st">'All Season'</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Sweater'</span>, <span class="st">'Wool Sweater'</span>, <span class="st">'Clothing'</span>, <span class="st">'M'</span>, <span class="st">'Green'</span>, <span class="st">'Fall'</span>),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Scarf'</span>, <span class="st">'Silk Scarf'</span>, <span class="st">'Accessories'</span>, <span class="st">'One Size'</span>, <span class="st">'Red'</span>, <span class="st">'Winter'</span>),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Gloves'</span>, <span class="st">'Leather Gloves'</span>, <span class="st">'Accessories'</span>, <span class="st">'M'</span>, <span class="st">'Brown'</span>, <span class="st">'Winter'</span>),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>(<span class="st">'Shorts'</span>, <span class="st">'Cargo Shorts'</span>, <span class="st">'Clothing'</span>, <span class="st">'L'</span>, <span class="st">'Khaki'</span>, <span class="st">'Summer'</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="values-for-purchase-table" class="level4">
+<h4 class="anchored" data-anchor-id="values-for-purchase-table">Values for Purchase table</h4>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> Purchase (Purchase_ID, Customer_ID, Product_ID, Purchase_Amount_USD, Review_Rating)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">34.99</span>, <span class="fl">4.5</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="fl">64.00</span>, <span class="fl">3.1</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="fl">79.99</span>, <span class="fl">4.8</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="fl">199.99</span>, <span class="fl">4.9</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="fl">49.99</span>, <span class="fl">3.7</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="fl">89.99</span>, <span class="fl">4.0</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>(<span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="fl">25.00</span>, <span class="fl">2.9</span>),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>(<span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="fl">22.99</span>, <span class="fl">4.2</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>(<span class="dv">9</span>, <span class="dv">9</span>, <span class="dv">9</span>, <span class="fl">120.00</span>, <span class="fl">4.4</span>),</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="fl">18.50</span>, <span class="fl">3.5</span>),</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>(<span class="dv">11</span>, <span class="dv">11</span>, <span class="dv">11</span>, <span class="fl">75.00</span>, <span class="fl">4.3</span>),</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>(<span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">12</span>, <span class="fl">55.25</span>, <span class="fl">3.9</span>),</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>(<span class="dv">13</span>, <span class="dv">13</span>, <span class="dv">13</span>, <span class="fl">30.99</span>, <span class="fl">3.2</span>),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>(<span class="dv">14</span>, <span class="dv">14</span>, <span class="dv">14</span>, <span class="fl">45.99</span>, <span class="fl">4.7</span>),</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>(<span class="dv">15</span>, <span class="dv">15</span>, <span class="dv">15</span>, <span class="fl">29.50</span>, <span class="fl">3.6</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="values-for-payment-table" class="level4">
+<h4 class="anchored" data-anchor-id="values-for-payment-table">Values for Payment table</h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> Payment (Payment_ID, Customer_ID, Payment_Method, Discount_Applied, Promo_Code_Used)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="st">'Venmo'</span>, <span class="st">'Yes'</span>, <span class="st">'SPRING10'</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="st">'Cash'</span>, <span class="st">'No'</span>, <span class="kw">NULL</span>),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="st">'Credit Card'</span>, <span class="st">'Yes'</span>, <span class="st">'WELCOME5'</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="st">'PayPal'</span>, <span class="st">'No'</span>, <span class="kw">NULL</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="st">'PayPal'</span>, <span class="st">'Yes'</span>, <span class="st">'SAVE20'</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="st">'Venmo'</span>, <span class="st">'No'</span>, <span class="kw">NULL</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>(<span class="dv">7</span>, <span class="dv">7</span>, <span class="st">'Cash'</span>, <span class="st">'Yes'</span>, <span class="st">'FALL15'</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>(<span class="dv">8</span>, <span class="dv">8</span>, <span class="st">'Credit Card'</span>, <span class="st">'No'</span>, <span class="kw">NULL</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>(<span class="dv">9</span>, <span class="dv">9</span>, <span class="st">'Venmo'</span>, <span class="st">'Yes'</span>, <span class="st">'FREESHIP'</span>),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="st">'Cash'</span>, <span class="st">'No'</span>, <span class="kw">NULL</span>),</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>(<span class="dv">11</span>, <span class="dv">11</span>, <span class="st">'Bank Transfer'</span>, <span class="st">'Yes'</span>, <span class="st">'HOLIDAY25'</span>),</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>(<span class="dv">12</span>, <span class="dv">12</span>, <span class="st">'Bank Transfer'</span>, <span class="st">'No'</span>, <span class="kw">NULL</span>),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>(<span class="dv">13</span>, <span class="dv">13</span>, <span class="st">'Venmo'</span>, <span class="st">'No'</span>, <span class="kw">NULL</span>),</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>(<span class="dv">14</span>, <span class="dv">14</span>, <span class="st">'PayPal'</span>, <span class="st">'Yes'</span>, <span class="st">'WEEKLY20'</span>),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>(<span class="dv">15</span>, <span class="dv">15</span>, <span class="st">'Debit Card'</span>, <span class="st">'No'</span>, <span class="kw">NULL</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="values-for-shipping-table" class="level4">
+<h4 class="anchored" data-anchor-id="values-for-shipping-table">Values for Shipping table</h4>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> Shipping (Shipping_ID, Customer_ID, Customer_Name, Shipping_Type)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="st">'David Johnson'</span>, <span class="st">'Standard'</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="st">'Michael Smith'</span>, <span class="st">'Express'</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="st">'John Brown'</span>, <span class="st">'Standard'</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="st">'Robert Garcia'</span>, <span class="st">'Two-Day'</span>),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="st">'William Martinez'</span>, <span class="st">'Standard'</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="st">'James Rodriguez'</span>, <span class="st">'Express'</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>(<span class="dv">7</span>, <span class="dv">7</span>, <span class="st">'Charles Davis'</span>, <span class="st">'Two-Day'</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>(<span class="dv">8</span>, <span class="dv">8</span>, <span class="st">'Joseph Lopez'</span>, <span class="st">'Standard'</span>),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>(<span class="dv">9</span>, <span class="dv">9</span>, <span class="st">'Thomas Wilson'</span>, <span class="st">'Express'</span>),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="st">'Christopher Anderson'</span>, <span class="st">'Standard'</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>(<span class="dv">11</span>, <span class="dv">11</span>, <span class="st">'Daniel Thomas'</span>, <span class="st">'Two-Day'</span>),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>(<span class="dv">12</span>, <span class="dv">12</span>, <span class="st">'Matthew Taylor'</span>, <span class="st">'Express'</span>),</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>(<span class="dv">13</span>, <span class="dv">13</span>, <span class="st">'Anthony Moore'</span>, <span class="st">'Standard'</span>),</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>(<span class="dv">14</span>, <span class="dv">14</span>, <span class="st">'Mark Jackson'</span>, <span class="st">'Same-Day'</span>),</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>(<span class="dv">15</span>, <span class="dv">15</span>, <span class="st">'Donald White'</span>, <span class="st">'Two-Day'</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+</section>
+<section id="python-list-tables-preview-rows" class="level2">
+<h2 class="anchored" data-anchor-id="python-list-tables-preview-rows">Python – List Tables &amp; Preview Rows</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> mysql.connector</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dotenv <span class="im">import</span> load_dotenv</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Load environment variables</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>load_dotenv()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>config <span class="op">=</span> {</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'host'</span>: os.getenv(<span class="st">"DB_HOST"</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'port'</span>: <span class="bu">int</span>(os.getenv(<span class="st">"DB_PORT"</span>)),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'user'</span>: os.getenv(<span class="st">"DB_USER"</span>),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'password'</span>: os.getenv(<span class="st">"DB_PASSWORD"</span>),</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'database'</span>: os.getenv(<span class="st">"DB_NAME"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Connect and explore</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>conn <span class="op">=</span> mysql.connector.<span class="ex">connect</span>(<span class="op">**</span>config)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>cursor <span class="op">=</span> conn.cursor()</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>cursor.execute(<span class="st">"SHOW TABLES;"</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>tables <span class="op">=</span> cursor.fetchall()</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (table_name,) <span class="kw">in</span> tables:</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">🟢 </span><span class="sc">{</span>table_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.read_sql(<span class="ss">f"SELECT * FROM </span><span class="sc">{</span>table_name<span class="sc">}</span><span class="ss"> LIMIT 5"</span>, conn)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(df)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>cursor.close()</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>conn.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="first-5-rows-data-from-each-table" class="level2">
+<h2 class="anchored" data-anchor-id="first-5-rows-data-from-each-table">First 5 row’s Data from each table</h2>
+<p>🟢 customer</p>
+<pre class="datatable"><code>| Customer_ID | Age | Gender | Location      | Subscription_Status | Previous_Purchases | Preferred_Payment_Method | Frequency_of_Purchases |
+|-------------|-----|--------|---------------|---------------------|---------------------|---------------------------|-------------------------|
+| 1           | 55  | Male   | Kentucky      | Yes                 | 14                  | Venmo                     | Fortnightly             |
+| 2           | 19  | Male   | Maine         | Yes                 | 2                   | Cash                      | Fortnightly             |
+| 3           | 50  | Male   | Massachusetts | Yes                 | 23                  | Credit Card               | Weekly                  |
+| 4           | 21  | Male   | Rhode Island  | Yes                 | 49                  | PayPal                    | Weekly                  |
+| 5           | 45  | Male   | Oregon        | Yes                 | 31                  | PayPal                    | Annually                |</code></pre>
+<p>🟢 payment</p>
+<pre class="datatable"><code>| Payment_ID | Customer_ID | Payment_Method | Discount_Applied | Promo_Code_Used |
+|------------|-------------|----------------|------------------|------------------|
+| 1          | 1           | Venmo          | Yes              | SPRING10         |
+| 2          | 2           | Cash           | No               | None             |
+| 3          | 3           | Credit Card    | Yes              | WELCOME5         |
+| 4          | 4           | PayPal         | No               | None             |
+| 5          | 5           | PayPal         | Yes              | SAVE20           |</code></pre>
+<p>🟢 product</p>
+<pre class="datatable"><code>| Product_ID | Item_Purchased | Product_Name | Category    | Size     | Color     | Season     |
+|------------|----------------|--------------|-------------|----------|-----------|------------|
+| 1          | Blouse         | Blouse       | Clothing    | M        | Turquoise | Spring     |
+| 2          | Sneakers       | Sneakers     | Footwear    | 9        | White     | Summer     |
+| 3          | Jeans          | Jeans        | Clothing    | 32       | Blue      | Winter     |
+| 4          | Watch          | Smart Watch  | Accessories | One Size | Black     | All Season |
+| 5          | Dress          | Floral Dress | Clothing    | S        | Yellow    | Spring     |</code></pre>
+<p>🟢 purchase</p>
+<pre class="datatable"><code>| Purchase_ID | Customer_ID | Product_ID | Purchase_Amount_USD | Review_Rating |
+|-------------|-------------|------------|----------------------|----------------|
+| 1           | 1           | 1          | 34.99                | 4.5            |
+| 2           | 2           | 2          | 64.00                | 3.1            |
+| 3           | 3           | 3          | 79.99                | 4.8            |
+| 4           | 4           | 4          | 199.99               | 4.9            |
+| 5           | 5           | 5          | 49.99                | 3.7            |</code></pre>
+<p>🟢 shipping</p>
+<pre class="datatable"><code>| Shipping_ID | Customer_ID | Customer_Name     | Shipping_Type |
+|-------------|-------------|-------------------|----------------|
+| 1           | 1           | David Johnson     | Standard       |
+| 2           | 2           | Michael Smith     | Express        |
+| 3           | 3           | John Brown        | Standard       |
+| 4           | 4           | Robert Garcia     | Two-Day        |
+| 5           | 5           | William Martinez  | Standard       |</code></pre>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
