@@ -1,0 +1,431 @@
+---
+title: "Homework 5: Customer Shopping Database"
+format: html
+toc: true
+toc-title: "Table of Contents"
+toc-depth: 3
+---
+
+#### **Authors:**
+<p>
+  <em>Eshika Sanjana Konyala - konyalae@vcu.edu
+</em> <br>
+  <em>Sowmya Sri Regu - regus@vcu.edu</em><br>
+  <em>Srigana Pulikantham - pulikanthams@vcu.edu</em> <br> 
+  <em>Viditha Reddy Enukulla - enukullav@vcu.edu</em>
+</p>
+
+**GitHub Repository:** 
+
+# Introduction
+
+This report documents a database schema designed to track customer shopping behavior, purchases, payments, and shipping details. It includes ER diagrams, schema listings, and sample data. The database, `Customer_shopping`, was created using MySQL and explored using Python with Pandas.
+
+# Entities and Relationships
+
+The following entities were identified from HW3:
+
+- **Customer**
+- **Product**
+- **Purchase**
+- **Payment**
+- **Shipping**
+
+These entities and their relationships are defined through primary and foreign keys.
+
+
+# ER Diagram
+
+## Chen ER Diagram
+```{dot}
+digraph CustomerShoppingChen {
+    rankdir=LR;
+    node [shape=ellipse, fontname="Helvetica"];
+    edge [fontname="Helvetica"];
+
+    // === Customer Entity ===
+    subgraph cluster_customer {
+        label = "Customer";
+        style = filled;
+        color = lightblue;
+        shape = box;
+
+        CustomerID;
+        Age;
+        Gender;
+        Location;
+        Subscription_Status;
+        Previous_Purchases;
+        Preferred_Payment_Method;
+        Frequency_of_Purchases;
+    }
+
+    // === Product Entity ===
+    subgraph cluster_product {
+        label = "Product";
+        style = filled;
+        color = lightyellow;
+
+        Product_ID;
+        Item_Purchased;
+        Product_Name;
+        Category;
+        Size;
+        Color;
+        Season;
+    }
+
+    // === Purchase Entity ===
+    subgraph cluster_purchase {
+        label = "Purchase";
+        style = filled;
+        color = lightpink;
+
+        Purchase_ID;
+        Purchase_Amount_USD;
+        Review_Rating;
+    }
+
+    // === Payment Entity ===
+    subgraph cluster_payment {
+        label = "Payment";
+        style = filled;
+        color = lightgreen;
+
+        Payment_ID;
+        Payment_Method;
+        Discount_Applied;
+        Promo_Code_Used;
+    }
+
+    // === Shipping Entity ===
+    subgraph cluster_shipping {
+        label = "Shipping";
+        style = filled;
+        color = lightcyan;
+
+        Shipping_ID;
+        Customer_Name;
+        Shipping_Type;
+    }
+
+    // === Relationships ===
+    CustomerID -> Purchase_ID [label="makes"];
+    CustomerID -> Payment_ID [label="uses"];
+    CustomerID -> Shipping_ID [label="receives"];
+    Purchase_ID -> Product_ID [label="includes"];
+}
+```
+
+# Crow’s Foot ER Diagram (Mermaid)
+
+```{mermaid}
+erDiagram
+    CUSTOMER ||--o{ PURCHASE : makes
+    CUSTOMER ||--o{ PAYMENT : uses
+    CUSTOMER ||--o{ SHIPPING : receives
+    PURCHASE }|--|| PRODUCT : contains
+    
+    CUSTOMER {
+        int Customer_ID PK
+        int Age
+        string Gender
+        string Location
+        string Subscription_Status
+        int Previous_Purchases
+        string Preferred_Payment_Method
+        string Frequency_of_Purchases
+    }
+    
+    PRODUCT {
+        string Item_Purchased PK
+        string Product_Name
+        string Category
+        string Size
+        string Color
+        string Season
+    }
+    
+    PURCHASE {
+        int Purchase_ID PK
+        int Customer_ID FK
+        string Item_Purchased FK
+        float Purchase_Amount_USD
+        float Review_Rating
+    }
+    
+    PAYMENT {
+        int Payment_ID PK
+        int Customer_ID FK
+        string Payment_Method
+        string Discount_Applied
+        string Promo_Code_Used
+    }
+    
+    SHIPPING {
+        int Shipping_ID PK
+        int Customer_ID FK
+        string Customer_Name
+        string Shipping_Type
+    }
+
+```
+
+## MySQL statements(query's)
+
+```sql
+CREATE DATABASE Customer_shopping;
+USE Customer_shopping;
+
+CREATE TABLE Customer (
+    Customer_ID INT PRIMARY KEY,
+    Age INT,
+    Gender VARCHAR(10),
+    Location VARCHAR(100),
+    Subscription_Status VARCHAR(10),
+    Previous_Purchases INT,
+    Preferred_Payment_Method VARCHAR(50),
+    Frequency_of_Purchases VARCHAR(50)
+);
+
+CREATE TABLE Product (
+    Product_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Item_Purchased VARCHAR(100),
+    Product_Name VARCHAR(100),
+    Category VARCHAR(50),
+    Size VARCHAR(10),
+    Color VARCHAR(30),
+    Season VARCHAR(30)
+);
+
+CREATE TABLE Purchase (
+    Purchase_ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Product_ID INT,
+    Purchase_Amount_USD DECIMAL(10,2),
+    Review_Rating DECIMAL(2,1),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    FOREIGN KEY (Product_ID) REFERENCES Product(Product_ID)
+);
+
+CREATE TABLE Payment (
+    Payment_ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Payment_Method VARCHAR(50),
+    Discount_Applied VARCHAR(10),
+    Promo_Code_Used VARCHAR(50),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
+);
+
+CREATE TABLE Shipping (
+    Shipping_ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Customer_Name VARCHAR(100),
+    Shipping_Type VARCHAR(50),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
+);
+```
+### Inserting Values for table
+#### Values for customer table 
+
+````{.sql}
+INSERT INTO Customer (Customer_ID, Age, Gender, Location, Subscription_Status, Previous_Purchases, Preferred_Payment_Method, Frequency_of_Purchases)
+VALUES 
+(1, 55, 'Male', 'Kentucky', 'Yes', 14, 'Venmo', 'Fortnightly'),
+(2, 19, 'Male', 'Maine', 'Yes', 2, 'Cash', 'Fortnightly'),
+(3, 50, 'Male', 'Massachusetts', 'Yes', 23, 'Credit Card', 'Weekly'),
+(4, 21, 'Male', 'Rhode Island', 'Yes', 49, 'PayPal', 'Weekly'),
+(5, 45, 'Male', 'Oregon', 'Yes', 31, 'PayPal', 'Annually'),
+(6, 46, 'Male', 'Wyoming', 'Yes', 14, 'Venmo', 'Weekly'),
+(7, 63, 'Male', 'Montana', 'Yes', 49, 'Cash', 'Quarterly'),
+(8, 27, 'Male', 'Louisiana', 'Yes', 19, 'Credit Card', 'Weekly'),
+(9, 26, 'Male', 'West Virginia', 'Yes', 8, 'Venmo', 'Annually'),
+(10, 57, 'Male', 'Missouri', 'Yes', 4, 'Cash', 'Quarterly'),
+(11, 53, 'Male', 'Arkansas', 'Yes', 26, 'Bank Transfer', 'Bi-Weekly'),
+(12, 30, 'Male', 'Hawaii', 'Yes', 10, 'Bank Transfer', 'Fortnightly'),
+(13, 61, 'Male', 'Delaware', 'Yes', 37, 'Venmo', 'Fortnightly'),
+(14, 65, 'Male', 'New Hampshire', 'Yes', 31, 'PayPal', 'Weekly'),
+(15, 64, 'Male', 'New York', 'Yes', 34, 'Debit Card', 'Weekly');
+````
+
+#### Values for Product table 
+````{.sql}
+INSERT INTO Product (Item_Purchased, Product_Name, Category, Size, Color, Season)
+VALUES 
+('Blouse', 'Blouse', 'Clothing', 'M', 'Turquoise', 'Spring'),
+('Sneakers', 'Sneakers', 'Footwear', '9', 'White', 'Summer'),
+('Jeans', 'Jeans', 'Clothing', '32', 'Blue', 'Winter'),
+('Watch', 'Smart Watch', 'Accessories', 'One Size', 'Black', 'All Season'),
+('Dress', 'Floral Dress', 'Clothing', 'S', 'Yellow', 'Spring'),
+('Boots', 'Ankle Boots', 'Footwear', '8', 'Brown', 'Fall'),
+('Hat', 'Sun Hat', 'Accessories', 'One Size', 'Beige', 'Summer'),
+('T-Shirt', 'Graphic Tee', 'Clothing', 'L', 'Red', 'Summer'),
+('Coat', 'Winter Coat', 'Clothing', 'XL', 'Gray', 'Winter'),
+('Sandals', 'Beach Sandals', 'Footwear', '7', 'Pink', 'Summer'),
+('Bag', 'Handbag', 'Accessories', 'Medium', 'Black', 'All Season'),
+('Sweater', 'Wool Sweater', 'Clothing', 'M', 'Green', 'Fall'),
+('Scarf', 'Silk Scarf', 'Accessories', 'One Size', 'Red', 'Winter'),
+('Gloves', 'Leather Gloves', 'Accessories', 'M', 'Brown', 'Winter'),
+('Shorts', 'Cargo Shorts', 'Clothing', 'L', 'Khaki', 'Summer');
+````
+
+#### Values for Purchase table 
+````{.sql}
+INSERT INTO Purchase (Purchase_ID, Customer_ID, Product_ID, Purchase_Amount_USD, Review_Rating)
+VALUES 
+(1, 1, 1, 34.99, 4.5),
+(2, 2, 2, 64.00, 3.1),
+(3, 3, 3, 79.99, 4.8),
+(4, 4, 4, 199.99, 4.9),
+(5, 5, 5, 49.99, 3.7),
+(6, 6, 6, 89.99, 4.0),
+(7, 7, 7, 25.00, 2.9),
+(8, 8, 8, 22.99, 4.2),
+(9, 9, 9, 120.00, 4.4),
+(10, 10, 10, 18.50, 3.5),
+(11, 11, 11, 75.00, 4.3),
+(12, 12, 12, 55.25, 3.9),
+(13, 13, 13, 30.99, 3.2),
+(14, 14, 14, 45.99, 4.7),
+(15, 15, 15, 29.50, 3.6);
+````
+
+#### Values for Payment table 
+````{.sql}
+INSERT INTO Payment (Payment_ID, Customer_ID, Payment_Method, Discount_Applied, Promo_Code_Used)
+VALUES
+(1, 1, 'Venmo', 'Yes', 'SPRING10'),
+(2, 2, 'Cash', 'No', NULL),
+(3, 3, 'Credit Card', 'Yes', 'WELCOME5'),
+(4, 4, 'PayPal', 'No', NULL),
+(5, 5, 'PayPal', 'Yes', 'SAVE20'),
+(6, 6, 'Venmo', 'No', NULL),
+(7, 7, 'Cash', 'Yes', 'FALL15'),
+(8, 8, 'Credit Card', 'No', NULL),
+(9, 9, 'Venmo', 'Yes', 'FREESHIP'),
+(10, 10, 'Cash', 'No', NULL),
+(11, 11, 'Bank Transfer', 'Yes', 'HOLIDAY25'),
+(12, 12, 'Bank Transfer', 'No', NULL),
+(13, 13, 'Venmo', 'No', NULL),
+(14, 14, 'PayPal', 'Yes', 'WEEKLY20'),
+(15, 15, 'Debit Card', 'No', NULL);
+````
+
+#### Values for Shipping table 
+````{.sql}
+INSERT INTO Shipping (Shipping_ID, Customer_ID, Customer_Name, Shipping_Type)
+VALUES
+(1, 1, 'David Johnson', 'Standard'),
+(2, 2, 'Michael Smith', 'Express'),
+(3, 3, 'John Brown', 'Standard'),
+(4, 4, 'Robert Garcia', 'Two-Day'),
+(5, 5, 'William Martinez', 'Standard'),
+(6, 6, 'James Rodriguez', 'Express'),
+(7, 7, 'Charles Davis', 'Two-Day'),
+(8, 8, 'Joseph Lopez', 'Standard'),
+(9, 9, 'Thomas Wilson', 'Express'),
+(10, 10, 'Christopher Anderson', 'Standard'),
+(11, 11, 'Daniel Thomas', 'Two-Day'),
+(12, 12, 'Matthew Taylor', 'Express'),
+(13, 13, 'Anthony Moore', 'Standard'),
+(14, 14, 'Mark Jackson', 'Same-Day'),
+(15, 15, 'Donald White', 'Two-Day');
+````
+
+
+## Python – List Tables & Preview Rows
+
+```python
+import mysql.connector
+import pandas as pd
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+
+config = {
+    'host': os.getenv("DB_HOST"),
+    'port': int(os.getenv("DB_PORT")),
+    'user': os.getenv("DB_USER"),
+    'password': os.getenv("DB_PASSWORD"),
+    'database': os.getenv("DB_NAME")
+}
+
+# Connect and explore
+conn = mysql.connector.connect(**config)
+cursor = conn.cursor()
+cursor.execute("SHOW TABLES;")
+tables = cursor.fetchall()
+
+for (table_name,) in tables:
+    print(f"\n🟢 {table_name}")
+    df = pd.read_sql(f"SELECT * FROM {table_name} LIMIT 5", conn)
+    print(df)
+
+cursor.close()
+conn.close()
+```
+
+## First 5 row's Data from each table
+
+🟢 customer
+
+```{.datatable}
+| Customer_ID | Age | Gender | Location      | Subscription_Status | Previous_Purchases | Preferred_Payment_Method | Frequency_of_Purchases |
+|-------------|-----|--------|---------------|---------------------|---------------------|---------------------------|-------------------------|
+| 1           | 55  | Male   | Kentucky      | Yes                 | 14                  | Venmo                     | Fortnightly             |
+| 2           | 19  | Male   | Maine         | Yes                 | 2                   | Cash                      | Fortnightly             |
+| 3           | 50  | Male   | Massachusetts | Yes                 | 23                  | Credit Card               | Weekly                  |
+| 4           | 21  | Male   | Rhode Island  | Yes                 | 49                  | PayPal                    | Weekly                  |
+| 5           | 45  | Male   | Oregon        | Yes                 | 31                  | PayPal                    | Annually                |
+```
+
+🟢 payment
+```{.datatable}
+| Payment_ID | Customer_ID | Payment_Method | Discount_Applied | Promo_Code_Used |
+|------------|-------------|----------------|------------------|------------------|
+| 1          | 1           | Venmo          | Yes              | SPRING10         |
+| 2          | 2           | Cash           | No               | None             |
+| 3          | 3           | Credit Card    | Yes              | WELCOME5         |
+| 4          | 4           | PayPal         | No               | None             |
+| 5          | 5           | PayPal         | Yes              | SAVE20           |
+```
+
+
+🟢 product
+```{.datatable}
+| Product_ID | Item_Purchased | Product_Name | Category    | Size     | Color     | Season     |
+|------------|----------------|--------------|-------------|----------|-----------|------------|
+| 1          | Blouse         | Blouse       | Clothing    | M        | Turquoise | Spring     |
+| 2          | Sneakers       | Sneakers     | Footwear    | 9        | White     | Summer     |
+| 3          | Jeans          | Jeans        | Clothing    | 32       | Blue      | Winter     |
+| 4          | Watch          | Smart Watch  | Accessories | One Size | Black     | All Season |
+| 5          | Dress          | Floral Dress | Clothing    | S        | Yellow    | Spring     |
+```
+
+
+🟢 purchase
+```{.datatable}
+| Purchase_ID | Customer_ID | Product_ID | Purchase_Amount_USD | Review_Rating |
+|-------------|-------------|------------|----------------------|----------------|
+| 1           | 1           | 1          | 34.99                | 4.5            |
+| 2           | 2           | 2          | 64.00                | 3.1            |
+| 3           | 3           | 3          | 79.99                | 4.8            |
+| 4           | 4           | 4          | 199.99               | 4.9            |
+| 5           | 5           | 5          | 49.99                | 3.7            |
+```
+
+
+🟢 shipping
+```{.datatable}
+| Shipping_ID | Customer_ID | Customer_Name     | Shipping_Type |
+|-------------|-------------|-------------------|----------------|
+| 1           | 1           | David Johnson     | Standard       |
+| 2           | 2           | Michael Smith     | Express        |
+| 3           | 3           | John Brown        | Standard       |
+| 4           | 4           | Robert Garcia     | Two-Day        |
+| 5           | 5           | William Martinez  | Standard       |
+```
+
+
