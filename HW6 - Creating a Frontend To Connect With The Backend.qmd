@@ -1,0 +1,134 @@
+---
+title: "HW6 - Creating a Frontend To Connect With The Backend."
+format: html
+toc: true
+toc-title: "Table of Contents"
+toc-depth: 3
+---
+#### **Authors:**
+<p>
+  <em>Eshika Sanjana Konyala - konyalae@vcu.edu
+</em> <br>
+  <em>Sowmya Sri Regu - regus@vcu.edu</em><br>
+  <em>Srigana Pulikantham - pulikanthams@vcu.edu</em> <br> 
+  <em>Viditha Reddy Enukulla - enukullav@vcu.edu</em>
+</p>
+
+**GitHub Repository:** 
+https://github.com/Eshikasanjana/Advanced-Database
+
+# Introduction
+
+This report presents the development of a simple Streamlit-based web frontend for the Customer_shopping database created in Homework 5. The goal of Homework 6 is to demonstrate a functional user interface that connects to a MySQL backend and allows interaction with the data through localhost.
+
+# Tools Used
+
+- **Streamlit** – for building the frontend interface.
+- **MySQL** – as the backend database.
+- **Python** (with pandas, mysql-connector-python, python-dotenv) – to connect to and query the database.
+- **VS Code** – IDE for development.
+
+# Database Recap
+
+The backend MySQL database Customer_shopping contains the following tables:
+
+- **customer**
+- **product**
+- **purchase**
+- **payment**
+- **shipping**
+
+Each table contains 15 sample records inserted during Homework 5.
+
+# Application Overview
+
+The Streamlit app provides:
+
+- **A dropdown menu to select a table.**
+- **A live preview (first few rows) of the selected table.**
+- **A success message when the database is connected.**
+
+# Streamlit UI
+
+![Fig 1. Dropdown menu lists](Screenshot1.png)
+
+![Fig 2. Product Table](Screenshot2.png)
+
+![Fig 3. Customer Table](Screenshot3.png)
+
+# Directory Structure
+
+```plaintext
+HW6/
+├── app.py
+├── .env
+├── .streamlit/
+│   └── config.toml
+```
+
+# Streamlit Theme Configuration (.streamlit/config.toml)
+
+```plaintext
+[theme]
+primaryColor = "#6F42C1"
+backgroundColor = "#F4F2F9"
+secondaryBackgroundColor = "#E6E6FA"
+textColor = "#222222"
+font = "sans serif"
+```
+
+# Python Code (app.py)
+
+```python
+
+import streamlit as st
+import mysql.connector
+import pandas as pd
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# DB Config
+config = {
+    'host': os.getenv("DB_HOST"),
+    'port': int(os.getenv("DB_PORT")),
+    'user': os.getenv("DB_USER"),
+    'password': os.getenv("DB_PASSWORD"),
+    'database': os.getenv("DB_NAME")
+}
+
+st.set_page_config(page_title="Shopping Dashboard", page_icon="🛍️")
+st.title("🛍️ Customer Shopping Dashboard")
+
+try:
+    conn = mysql.connector.connect(**config)
+    st.success("Connected to database")
+    cursor = conn.cursor()
+
+    cursor.execute("SHOW TABLES;")
+    tables = [t[0] for t in cursor.fetchall()]
+
+    selected_table = st.selectbox("Choose a table", tables)
+
+    df = pd.read_sql(f"SELECT * FROM {selected_table} LIMIT 10", conn)
+    st.subheader(f"Preview of `{selected_table}` table")
+    st.dataframe(df)
+
+except Exception as e:
+    st.error(f" Error: {e}")
+finally:
+    if 'cursor' in locals(): cursor.close()
+    if 'conn' in locals(): conn.close()
+
+```
+
+# Output
+
+- **The Streamlit app loads on localhost:8501**
+- **Dropdown menu lists available tables**
+- **Displays the first 10 rows from selected table**
+
+# Conclusion
+
+The Streamlit application successfully connects to the MySQL backend and dynamically displays data from the Customer_shopping database. This demonstrates the integration of backend and frontend components on localhost as required for Homework 6.
